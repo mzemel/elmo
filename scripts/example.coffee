@@ -10,7 +10,7 @@
 
 module.exports = (robot) ->
 
-  robot_id = 'UCX0JQG2W'
+  robotId = 'UCX0JQG2W'
 
   abuses = [
     'ARE YOU FUCKING SORRY?', "I don't have the patience or crayons to explain it to you",
@@ -48,7 +48,7 @@ module.exports = (robot) ->
       res.reply res.random abuses
     else
       for { id } in userMentions
-        if id == robot_id then continue
+        if id == robotId then continue
         if roomMentions.length == 0
           res.send "<@#{id}>: #{res.random abuses}"
         else
@@ -60,16 +60,20 @@ module.exports = (robot) ->
   robot.respond /compliment (.*)/i, (res) ->
     victim = res.match[1]
     userMentions = (mention for mention in res.message.mentions when mention.type is "user")
+    roomMentions = (mention for mention in res.message.mentions when mention.type is "conversation")
 
     if victim is "me"
       res.reply res.random compliments
     else
-      if userMentions.length > 1
-        for { id } in userMentions
-          if id != robot_id
-            res.send "<@#{id}>: #{res.random compliments}"
-      else
-        res.send "You must mention someone using the @ sign"
+      for { id } in userMentions
+        if id == robotId then continue
+        if roomMentions.length == 0
+          res.send "<@#{id}>: #{res.random compliments}"
+        else
+          userId = id
+          for { id } in roomMentions
+            if id == res.message.room then continue
+            robot.messageRoom id, "<@#{userId}>, #{res.random compliments}"
 
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
