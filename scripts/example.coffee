@@ -41,27 +41,31 @@ module.exports = (robot) ->
 
   robot.respond /abuse (.*)/i, (res) ->
     victim = res.match[1]
-    user_mentions = (mention for mention in res.message.mentions when mention.type is "user")
+    userMentions = (mention for mention in res.message.mentions when mention.type is "user")
+    roomMentions = (mention for mention in res.message.mentions when mention.type is "conversation")
 
     if victim is "me"
       res.reply res.random abuses
     else
-      if user_mentions.length > 1
-        for { id } in user_mentions
-          if id != robot_id
-            res.send "<@#{id}>: #{res.random abuses}"
-      else
-        res.send "You must mention someone using the @ sign"
+      for { id } in userMentions
+        if id == robot_id then continue
+        if roomMentions.length == 0
+          res.send "<@#{id}>: #{res.random abuses}"
+        else
+          userId = id
+          for { id } in roomMentions
+            if id == res.message.room then continue
+            robot.messageRoom id, "<@#{userId}>: #{res.random abuses}"
 
   robot.respond /compliment (.*)/i, (res) ->
     victim = res.match[1]
-    user_mentions = (mention for mention in res.message.mentions when mention.type is "user")
+    userMentions = (mention for mention in res.message.mentions when mention.type is "user")
 
     if victim is "me"
       res.reply res.random compliments
     else
-      if user_mentions.length > 1
-        for { id } in user_mentions
+      if userMentions.length > 1
+        for { id } in userMentions
           if id != robot_id
             res.send "<@#{id}>: #{res.random compliments}"
       else
