@@ -8,6 +8,28 @@
 #
 #   These are from the scripting documentation: https://github.com/github/hubot/blob/master/docs/scripting.md
 
+module.exports = (robot) ->
+
+  robot_id = 'UCX0JQG2W'
+
+  timesEddieHasMissedTrivia = [
+    "October 2, 2018",
+    "October 9, 2018"
+  ]
+
+  robot.respond /eddie (.*)/i, (res) ->
+    action = res.match[1]
+    if action is "times missed"
+      res.reply `Eddie has missed trivia ${timesEddieHasMissedTrivia.length} times.`
+    else if action is "missed trivia again"
+      dt = new Date();
+      months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      today = months[(dt.getMonth() - 1)] + " " + dt.getDate() + ", " + dt.getFullYear();
+      timesEddieHasMissedTrivia.push(today);
+      res.reply "Eddie missed trivia again? What a jerk. I'll add today to the list."
+    else
+      res.reply "You must write '/eddie times missed' or '/eddie missed trivia again'"
+
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
   #

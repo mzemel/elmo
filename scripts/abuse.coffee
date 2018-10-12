@@ -8,6 +8,44 @@
 #
 #   These are from the scripting documentation: https://github.com/github/hubot/blob/master/docs/scripting.md
 
+module.exports = (robot) ->
+
+  robot_id = 'UCX0JQG2W'
+
+  abuses = [
+    'ARE YOU FUCKING SORRY?', "I don't have the patience or crayons to explain it to you",
+    'You impudent pillock', 'The only thing your mother wants for Christmas is a folded flag',
+    'They call you the frat mattress', 'You are dumber than a block of wood and not nearly as useful',
+    'You are kinda like Rapunzel except instead of letting down your hair you let down everyone in your life',
+    'God wasted a good asshole when he put teeth in your mouth',
+    'You are like the end piece of bread in a loaf, everyone touches you but no one wants you',
+    'Your parents must be furious with the one child policy',
+    "Words can't describe your beauty...   But numbers can.  2/10",
+    "You are a pizza burn on the roof of the world's mouth",
+    "You're not the dumbest person on the planet, but you sure better hope he doesn't die",
+    'You look like your parents would be disappointed in you.  If they stayed.',
+    'It looks like your face was on fire and someone tried to put it out with an ice pick',
+    'You will never be the type of person any dog you meet thinks you are.',
+    "If you were any stupider we'd have to water you", "You're so dense, light bends around you.",
+    "People like you are the reason God doesn't talk to us anymore",
+    'Take my lowest priority and put yourself beneath it.'
+  ]
+
+
+  robot.respond /abuse (.*)/i, (res) ->
+    victim = res.match[1]
+    user_mentions = (mention for mention in res.message.mentions when mention.type is "user")
+
+    if victim is "me"
+      res.reply res.random abuses
+    else
+      if user_mentions.length > 1
+        for { id } in user_mentions
+          if id != robot_id
+            res.send "<@#{id}>: #{res.random abuses}"
+      else
+        res.send "You must mention someone using the @ sign"
+
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
   #
