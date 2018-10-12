@@ -20,7 +20,7 @@ module.exports = (robot) ->
   robot.respond /eddie (.*)/i, (res) ->
     action = res.match[1]
     if action is "times missed"
-      res.reply "Eddie has missed trivia ${timesEddieHasMissedTrivia.length} times."
+      res.reply "Eddie has missed trivia #{timesEddieHasMissedTrivia.length} times."
     else if action is "missed trivia again"
       dt = new Date();
       months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
